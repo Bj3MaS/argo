@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: child2
+  namespace: argocd
+spec:
+  destination:
+    namespace: default
+    name: in-cluster
+  project: default  # Replace with your desired project name if needed
+  source:
+    chart: nginx
+    repoURL: https://stable.helm.sh/charts/nginx  # Update if using a different repository
+    targetRevision: LATEST  # Update to specific version if needed
+    # helm:
+    #   valuesObject:
+    #     values:
+    #       - key: replicaCount
+    #         value: 2
+    releaseName: child2  # Matches the application name
+  syncOptions:
+    - FailOnSharedResource=true

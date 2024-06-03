@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  install:
+    cmds:
+      - helm install argo-cd -n argo-cd --create-namespace
+    silent: true

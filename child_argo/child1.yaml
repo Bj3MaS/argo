@@ -1,0 +1,68 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: child1
+#   namespace: argocd
+# spec:
+#   destination:
+#     namespace: default
+#     name: in-cluster
+#   project: default
+#   source:
+#     repoURL: https://github.com/argoproj/argocd-example-apps.git
+#     targetRevision: HEAD
+#     path: helm-guestbook
+#     helm:
+#       releaseName: helm-guestbook
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#     - FailOnSharedResource=true
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: child1
+  namespace: argocd
+spec:
+  destination:
+    namespace: default
+    name: in-cluster
+  project: default  # Replace with your desired project name if needed
+  source:
+    chart: nginx
+    repoURL: registry-1.docker.io/bitnamicharts # Update if using a different repository
+    targetRevision: "*.*.*"
+    source:
+    helm:
+      values: |
+        service:
+          type: ClusterIP
+
+  # helm:
+  #   valueFiles:
+  #     - child1.yaml  # Path to your values file
+    releaseName: child1  # Matches the application name
+  syncOptions:
+    - FailOnSharedResource=true
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: nginx
+# spec:
+#   project: default
+#   source:
+#     chart: nginx
+#     repoURL: registry-1.docker.io/bitnamicharts  # note: the oci:// syntax is not included.
+#     targetRevision: 15.9.0
+#   destination:
+#     name: "in-cluster"
+#     namespace: nginx
